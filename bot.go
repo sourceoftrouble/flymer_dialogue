@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"regexp"
 	"time"
 
 	tele "gopkg.in/telebot.v3"
@@ -55,7 +56,9 @@ func main() {
 		message := c.Text()
 		sendOpts := tele.SendOptions{}
 		if c.Message().IsReply() {
-			message = fmt.Sprintf("```\n%s\n```\n%s", c.Message().ReplyTo.Text, message)
+			re := regexp.MustCompile("(?s)```.*?```")
+			reply := re.ReplaceAllString(c.Message().ReplyTo.Text, "")
+			message = fmt.Sprintf("```\n%s\n```\n%s", reply, message)
 			sendOpts.ParseMode = tele.ModeMarkdown
 		}
 		bot.Send(recipient, message, &sendOpts)
