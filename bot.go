@@ -17,6 +17,10 @@ const configPath = "./config/dialogue.json"
 
 func main() {
 	dialogueConfig, err := LoadDialogueFromJSON()
+    if (err != nil) {
+        log.Fatalf("Config parsing error: %s", err)
+        return
+    }
 
 	pref := tele.Settings{
 		Token:  os.Getenv("BOT_TOKEN"),

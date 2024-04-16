@@ -21,19 +21,7 @@
     # Enable previews and customize configuration
     previews = {
       enable = true;
-      previews = [
-        {
-          command = [
-            "nodemon"
-            "--signal" "SIGHUP"
-            "-w" "."
-            "-e" "go,html"
-            "-x" "go run bot.go"
-          ];
-          manager = "web";
-          id = "web";
-        }
-      ];
+      previews = [];
     };
   };
 }
