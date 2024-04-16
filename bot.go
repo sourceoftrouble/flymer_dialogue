@@ -17,10 +17,10 @@ const configPath = "./config/dialogue.json"
 
 func main() {
 	dialogueConfig, err := LoadDialogueFromJSON()
-    if (err != nil) {
-        log.Fatalf("Config parsing error: %s", err)
-        return
-    }
+	if err != nil {
+		log.Fatalf("Config parsing error: %s", err)
+		return
+	}
 
 	pref := tele.Settings{
 		Token:  os.Getenv("BOT_TOKEN"),
@@ -52,7 +52,13 @@ func main() {
 			return nil
 		}
 
-		bot.Send(recipient, c.Text())
+		message := c.Text()
+		sendOpts := tele.SendOptions{}
+		if c.Message().IsReply() {
+			message = fmt.Sprintf("```\n%s\n```\n%s", c.Message().ReplyTo.Text, message)
+			sendOpts.ParseMode = tele.ModeMarkdown
+		}
+		bot.Send(recipient, message, &sendOpts)
 		return nil
 	})
 
