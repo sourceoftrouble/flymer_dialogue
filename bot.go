@@ -65,6 +65,19 @@ func main() {
 		return nil
 	})
 
+	bot.Handle(tele.OnSticker, func(c tele.Context) error {
+		recipient := tryGetRecipientByChatId(c.Chat().ID, *dialogueConfig)
+		if recipient == nil {
+			return nil
+		}
+
+		bot.Send(
+			recipient,
+			c.Message().Sticker,
+		)
+		return nil
+	})
+
 	bot.Handle(tele.OnPhoto, func(c tele.Context) error {
 		recipient := tryGetRecipientByChatId(c.Chat().ID, *dialogueConfig)
 		if recipient == nil {
