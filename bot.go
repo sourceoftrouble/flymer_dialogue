@@ -55,7 +55,7 @@ func main() {
 
 		message := c.Text()
 		sendOpts := tele.SendOptions{}
-		if c.Message().IsReply() {
+		if c.Message().IsReply() && len(c.Message().ReplyTo.Text) > 0 {
 			re := regexp.MustCompile("(?s)```.*?```")
 			reply := re.ReplaceAllString(c.Message().ReplyTo.Text, "")
 			message = fmt.Sprintf("```\n%s\n```\n%s", reply, message)
@@ -74,6 +74,19 @@ func main() {
 		bot.Send(
 			recipient,
 			c.Message().Sticker,
+		)
+		return nil
+	})
+
+	bot.Handle(tele.OnAnimation, func(c tele.Context) error {
+		recipient := tryGetRecipientByChatId(c.Chat().ID, *dialogueConfig)
+		if recipient == nil {
+			return nil
+		}
+
+		bot.Send(
+			recipient,
+			c.Message().Animation,
 		)
 		return nil
 	})
